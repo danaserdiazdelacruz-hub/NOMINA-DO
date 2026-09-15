@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nómina Quincenal RD</title>
+<style>
+:root{
+  --bg:#f1f1ef;
+  --panel:#ffffff;
+  --line:#c6c6c2;
+  --line2:#e0e0dc;
+  --calc:#ececea;
+  --ink:#1c1c1c;
+  --ink2:#57574f;
+  --barra:#3c3c39;
+  --amar:#c9960c;
+  --amarsuave:#fbf1d2;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:1.45;-webkit-text-size-adjust:100%}
+header{background:var(--barra);color:#f5f5f2;border-bottom:3px solid var(--amar);padding:16px 18px}
+h1{font-size:22px;margin:0 0 2px 0}
+.sub{font-size:15px;color:#c8c8c2}
+nav{display:flex;flex-wrap:wrap;gap:8px;padding:12px 18px;background:var(--panel);border-bottom:1px solid var(--line)}
+nav button{font-family:inherit;font-size:17px;padding:12px 20px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-bottom:3px solid var(--line);cursor:pointer}
+nav button.on{background:#fff;border-bottom:3px solid var(--amar);font-weight:bold}
+main{padding:18px}
+section{display:none}
+section.on{display:block}
+h2{font-size:20px;margin:0 0 14px 0;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{font-size:18px;margin:0 0 12px 0}
+.panel{background:var(--panel);border:1px solid var(--line);padding:16px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:260px 1fr;gap:10px 14px;align-items:center;max-width:720px}
+label{font-size:16px;color:var(--ink2)}
+input,select{font-family:inherit;font-size:17px;padding:10px;border:1px solid var(--line);background:#fff;color:var(--ink);width:100%}
+input:focus,select:focus{outline:2px solid var(--amar);outline-offset:-1px}
+input.num{text-align:right}
+button.act{font-family:inherit;font-size:17px;padding:12px 20px;border:1px solid var(--line);background:#e4e4e0;color:var(--ink);cursor:pointer;margin:0 8px 8px 0}
+button.act:hover{background:#d6d6d2}
+button.act.fuerte{background:var(--amarsuave);border-color:var(--amar);font-weight:bold}
+button.act:disabled{opacity:.45;cursor:not-allowed}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:0;margin:14px 0 4px 0}
+.bar select{width:auto;min-width:220px;margin:0 8px 8px 0}
+.selper{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:14px}
+.selper div{display:flex;flex-direction:column;gap:4px}
+.selper span{font-size:15px;color:var(--ink2)}
+.selper select{min-width:150px}
+.estado{display:inline-block;padding:7px 12px;border:1px solid var(--line);background:var(--calc);font-size:15px}
+.estado.cerrada{background:var(--amarsuave);border-color:var(--amar);font-weight:bold}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);background:#fff}
+table{border-collapse:collapse;width:100%;font-size:16px}
+th,td{border:1px solid var(--line2);padding:8px;white-space:nowrap}
+th{background:#e6e6e2;text-align:left;font-size:15px;position:sticky;top:0;border-bottom:2px solid var(--amar)}
+td.calc{background:var(--calc);text-align:right}
+td.edit{background:var(--amarsuave);padding:2px}
+td.edit input{border:1px solid #ddc98a;background:var(--amarsuave);padding:8px 6px;font-size:16px}
+td.txt{background:#fff}
+tr.tot td{background:var(--amarsuave);font-weight:bold;text-align:right;border-top:2px solid var(--amar)}
+tr.tot td.lbl{text-align:left}
+#tabNom th:nth-child(1),#tabNom td:nth-child(1){position:sticky;left:0;min-width:46px;width:46px;z-index:3}
+#tabNom th:nth-child(2),#tabNom td:nth-child(2){position:sticky;left:46px;min-width:200px;z-index:3;box-shadow:2px 0 0 var(--line)}
+#tfNom td.lbl{position:sticky;left:0;z-index:3;box-shadow:2px 0 0 var(--line)}
+.fichero{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:6px}
+.fichero .quien{flex:1 1 280px;display:flex;flex-direction:column;gap:4px}
+.fichero button{font-family:inherit;font-size:20px;padding:9px 16px;border:1px solid var(--line);background:#e4e4e0;cursor:pointer}
+.captura{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:16px}
+.captura h4{font-size:17px;margin:0 0 10px 0;padding-bottom:5px;border-bottom:1px solid var(--line)}
+.cgrid{display:grid;grid-template-columns:1fr 140px;gap:8px 12px;align-items:center}
+.cgrid label{color:var(--ink)}
+.cgrid input{background:var(--amarsuave);border:1px solid #ddc98a;font-size:18px;text-align:right}
+.capres{display:flex;flex-wrap:wrap;gap:26px;margin-top:18px;padding:14px 16px;background:var(--calc);border-top:2px solid var(--amar)}
+.capres b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.capres span{font-size:15px;color:var(--ink2)}
+.aviso{background:var(--amarsuave);border:1px solid #ddc98a;border-left:5px solid var(--amar);padding:12px 14px;margin:0 0 14px 0;font-size:16px}
+.note{font-size:15px;color:var(--ink2);margin:10px 0}
+table.res{border-collapse:collapse;width:100%;font-size:17px;background:#fff}
+table.res th,table.res td{border:1px solid var(--line2);padding:10px 12px;text-align:right}
+table.res th{background:#e6e6e2;font-size:16px;border-bottom:2px solid var(--amar)}
+table.res th:first-child,table.res td:first-child{text-align:left}
+table.res td{font-variant-numeric:tabular-nums}
+table.res tr.fuerte td{font-weight:bold;background:var(--amarsuave);font-size:18px}
+table.res tr.fuerte td:first-child{border-left:4px solid var(--amar)}
+table.res tr.sep td{border-top:2px solid var(--line)}
+.riesgo{border-color:#b08a8a}
+.recibo{background:#fff;border:1px solid var(--line);padding:26px;max-width:640px}
+.recibo .line{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line2)}
+.recibo .line.sum{font-weight:bold;border-bottom:2px solid var(--amar)}
+.firma{margin-top:44px;font-size:16px}
+#zonaRecibo{display:none}
+@media print{
+  body{background:#fff}
+  header,nav,.noprint{display:none!important}
+  main{padding:0}
+  th{background:#e6ddc2!important;color:#1c1c1c!important}
+  body.reciboSolo main{display:none}
+  body.reciboSolo #zonaRecibo{display:block}
+  .recibo{border:none;max-width:none}
+}
+@media (max-width:820px){.captura{grid-template-columns:1fr}}
+@media (max-width:480px){
+  header{padding:14px max(14px,env(safe-area-inset-left))}
+  h1{font-size:20px}
+  nav{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px 12px}
+  nav button{width:100%;padding:13px 6px;font-size:16px}
+  main{padding:12px max(12px,env(safe-area-inset-left)) 28px}
+  .panel{padding:12px}
+  .grid{grid-template-columns:1fr;gap:6px 0}
+  button.act{width:100%;margin-right:0}
+  .bar select{width:100%;min-width:0;margin-right:0}
+  .selper{gap:8px}
+  .selper div{flex:1 1 100%}
+  .selper select{min-width:0;width:100%}
+  .cgrid{grid-template-columns:1fr 118px}
+  .capres{gap:12px}
+  .capres div{flex:1 1 44%}
+  .capres b{font-size:19px}
+  #tabNom th:nth-child(2),#tabNom td:nth-child(2){min-width:140px}
+  table.res{font-size:16px}
+  table.res th,table.res td{padding:8px 10px}
+  .recibo{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Nómina Quincenal</h1>
+  <div class="sub" id="subHeader"></div>
+</header>
+
+<nav class="noprint">
+  <button data-tab="nomina" class="on">Nómina</button>
+  <button data-tab="empleados">Empleados</button>
+  <button data-tab="resumen">Resumen</button>
+  <button data-tab="ajustes">Ajustes</button>
+</nav>
+
+<main>
+
+<section id="tab-nomina" class="on">
+  <h2>Nómina de la quincena</h2>
+  <div class="selper noprint" id="selNomina"></div>
+  <div class="aviso" id="avisoCierre" style="display:none"></div>
+
+  <div class="panel noprint">
+    <h3>Movimientos de la quincena</h3>
+    <div class="fichero">
+      <button id="btnPrev" title="Empleado anterior">&#8249;</button>
+      <div class="quien"><span>Empleado</span><select id="capEmpleado"></select></div>
+      <button id="btnNext" title="Empleado siguiente">&#8250;</button>
+    </div>
+    <div class="note">Solo aquí se escribe. La tabla de abajo es de consulta.</div>
+    <div class="captura">
+      <div><h4>Le suma a esta quincena</h4><div class="cgrid" id="capIngresos"></div></div>
+      <div><h4>Le resta a esta quincena</h4><div class="cgrid" id="capDeducciones"></div></div>
+    </div>
+    <div class="capres" id="capResultado"></div>
+    <div class="bar"><button class="act" id="btnRecibo">Imprimir recibo de esta persona</button></div>
+  </div>
+
+  <div class="bar noprint">
+    <button class="act fuerte" id="btnCerrarQ">Cerrar quincena</button>
+    <button class="act" id="btnReabrirQ" style="display:none">Reabrir quincena</button>
+    <select id="masNomina">
+      <option value="">Más acciones</option>
+      <option value="copiar">Copiar movimientos de la quincena anterior</option>
+      <option value="limpiar">Limpiar movimientos de esta quincena</option>
+      <option value="csv">Exportar esta quincena a CSV</option>
+      <option value="print">Imprimir esta quincena</option>
+    </select>
+  </div>
+
+  <div class="tablewrap">
+    <table id="tabNom">
+      <thead><tr>
+        <th>No.</th><th>Nombre</th><th>Sueldo mensual</th><th>Sueldo 1/2</th>
+        <th>RD$ extra día</th><th>RD$ extra noche</th><th>RD$ feriado</th>
+        <th>Comisiones</th><th>Bonos</th><th>Otros ingresos</th><th>Total ingresos</th>
+        <th>AFP</th><th>SFS</th><th>ISR</th><th>Préstamo</th><th>Ahorro</th><th>Otras deducc.</th>
+        <th>Total deducc.</th><th>NETO A PAGAR</th>
+        <th>AFP empresa</th><th>SFS empresa</th><th>SRL</th><th>INFOTEP</th><th>Costo empresa</th>
+      </tr></thead>
+      <tbody id="tbNom"></tbody>
+      <tfoot id="tfNom"></tfoot>
+    </table>
+  </div>
+</section>
+
+<section id="tab-empleados">
+  <h2>Empleados</h2>
+  <div class="bar noprint">
+    <button class="act fuerte" id="btnAddEmp">Agregar empleado</button>
+    <button class="act" id="btnEmpCSV">Exportar lista a CSV</button>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr>
+        <th>No.</th><th>Código</th><th>Nombre completo</th><th>Cédula</th><th>Cargo</th>
+        <th>Fecha ingreso</th><th>Salario mensual</th><th>Estado</th><th>Cuenta banco</th>
+        <th>Tipo pago</th><th>Notas</th><th></th>
+      </tr></thead>
+      <tbody id="tbEmp"></tbody>
+    </table>
+  </div>
+  <div class="note">Solo los empleados en estado Activo entran en la nómina. Cuando alguien sale de la empresa se pone Inactivo, no se elimina, para no alterar las quincenas ya pagadas.</div>
+</section>
+
+<section id="tab-resumen">
+  <h2>Resumen</h2>
+  <div class="selper noprint">
+    <div><span>Ver</span>
+      <select id="vistaResumen">
+        <option value="quincena">Una quincena</option>
+        <option value="mes" selected>Un mes completo</option>
+        <option value="anio">El año completo</option>
+      </select>
+    </div>
+  </div>
+  <div class="selper noprint" id="selResumen"></div>
+  <div id="cuerpoResumen"></div>
+  <div class="bar noprint">
+    <button class="act" id="btnResCSV">Exportar a CSV</button>
+    <button class="act" id="btnResPrint">Imprimir</button>
+  </div>
+</section>
+
+<section id="tab-ajustes">
+  <h2>Datos de la empresa</h2>
+  <div class="panel">
+    <div class="grid">
+      <label>Nombre comercial</label><input id="emp_nombre">
+      <label>RNC</label><input id="emp_rnc">
+      <label>Registro TSS</label><input id="emp_tss">
+      <label>Teléfono</label><input id="emp_tel">
+      <label>Dirección</label><input id="emp_dir">
+    </div>
+  </div>
+
+  <h2>Tasas legales</h2>
+  <div class="panel">
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Concepto</th><th>% Empleado</th><th>% Empleador</th><th>Tope mensual RD$</th></tr></thead>
+        <tbody id="tbTasas"></tbody>
+      </table>
+    </div>
+    <div class="note">En decimal: 0.0287 es 2.87%. INFOTEP no tiene tope.</div>
+  </div>
+
+  <h2>Tabla ISR mensual</h2>
+  <div class="panel">
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Desde RD$</th><th>Hasta RD$</th><th>Tasa</th><th>Cuota fija RD$</th></tr></thead>
+        <tbody id="tbISR"></tbody>
+      </table>
+    </div>
+    <div class="note">Se aplica sobre el salario mensual menos AFP y SFS. El resultado del mes se divide entre las dos quincenas.</div>
+  </div>
+
+  <h2>Horas extra</h2>
+  <div class="panel">
+    <div class="grid">
+      <label>Horas ordinarias por quincena</label><input id="h_ord" class="num" type="number" step="any">
+      <label>Recargo extra diurna</label><input id="h_dia" class="num" type="number" step="any">
+      <label>Recargo extra nocturna</label><input id="h_noc" class="num" type="number" step="any">
+      <label>Recargo feriado o domingo</label><input id="h_fer" class="num" type="number" step="any">
+    </div>
+  </div>
+
+  <h2>Respaldo</h2>
+  <div class="panel">
+    <p class="note">Los datos se guardan en este navegador. Descargue el respaldo al cerrar cada quincena.</p>
+    <div class="bar">
+      <button class="act fuerte" id="btnExport">Descargar respaldo</button>
+      <button class="act" id="btnImportBtn">Cargar respaldo</button>
+      <input type="file" id="fileImport" accept=".json" style="display:none">
+    </div>
+    <div class="note" id="estadoGuardado"></div>
+  </div>
+
+  <h2>Pruebas</h2>
+  <div class="panel">
+    <p class="note">Carga una empresa ficticia con 10 empleadas y 5 quincenas para ver cómo se comporta. Reemplaza lo que haya; antes de hacerlo se descarga un respaldo.</p>
+    <button class="act" id="btnDemo">Cargar corrida de prueba</button>
+  </div>
+
+  <h2>Borrar todo</h2>
+  <div class="panel riesgo">
+    <p class="note">Elimina empleados, movimientos, cierres y configuración. Antes se descarga un respaldo.</p>
+    <button class="act" id="btnReset">Borrar todos los datos</button>
+  </div>
+</section>
+
+</main>
+
+<div id="zonaRecibo"></div>
+
+<script>
+var KEY = 'nomina_rd_v1';
+var memoria = {};
+var almacenOK = true;
+function guardar(){
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }
+  catch(e){ almacenOK = false; memoria[KEY] = JSON.stringify(S); }
+}
+function leer(){
+  try{ var t = localStorage.getItem(KEY); return t ? JSON.parse(t) : null; }
+  catch(e){ almacenOK = false; return memoria[KEY] ? JSON.parse(memoria[KEY]) : null; }
+}
+
+function estadoBase(){
+  return {
+    empresa:{nombre:'', rnc:'', tss:'', tel:'', dir:''},
+    periodo:{anio:2026, mes:9, q:1},
+    tasas:[
+      {id:'afp',     nombre:'AFP (pensiones)',        emp:0.0287, pat:0.0710, tope:464460},
+      {id:'sfs',     nombre:'SFS (salud / ARS)',      emp:0.0304, pat:0.0709, tope:232230},
+      {id:'srl',     nombre:'SRL (riesgos laborales)',emp:0,      pat:0.0120, tope:92892},
+      {id:'infotep', nombre:'INFOTEP',                emp:0,      pat:0.0100, tope:0}
+    ],
+    isr:[
+      {desde:0,        hasta:34685,    tasa:0,    fija:0},
+      {desde:34685.01, hasta:52027.42, tasa:0.15, fija:0},
+      {desde:52027.43, hasta:72260.25, tasa:0.20, fija:2601.33},
+      {desde:72260.26, hasta:99999999, tasa:0.25, fija:6648}
+    ],
+    horas:{ord:88, dia:0.35, noc:0.15, fer:1},
+    empleados:[],
+    mov:{},
+    cierres:{}
+  };
+}
+var S = leer() || estadoBase();
+if(!S.cierres) S.cierres = {};
+
+function n(v){ v = parseFloat(v); return isNaN(v) ? 0 : v; }
+function money(v){
+  var x = Math.round(n(v)*100)/100;
+  var s = x.toFixed(2).split('.');
+  s[0] = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return s[0]+'.'+s[1];
+}
+function tasa(id){
+  for(var i=0;i<S.tasas.length;i++){ if(S.tasas[i].id===id) return S.tasas[i]; }
+  return {emp:0,pat:0,tope:0};
+}
+var MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+function diasMes(a,m){ return new Date(a, m, 0).getDate(); }
+function dosDig(x){ return (x<10?'0':'')+x; }
+function textoPeriodo(){
+  var p = S.periodo, a = n(p.anio), m = n(p.mes);
+  var d1 = p.q==1 ? 1 : 16;
+  var d2 = p.q==1 ? 15 : diasMes(a,m);
+  return dosDig(d1)+'/'+dosDig(m)+'/'+a+' al '+dosDig(d2)+'/'+dosDig(m)+'/'+a+'  ·  Q'+p.q+' '+MESES[m-1]+' '+a;
+}
+function clave(anio, mes, q){ return anio+'-'+mes+'-'+q; }
+function clavePeriodo(){ return clave(S.periodo.anio, S.periodo.mes, S.periodo.q); }
+function movEn(k, id){
+  if(!S.mov[k]) S.mov[k] = {};
+  if(!S.mov[k][id]) S.mov[k][id] = {hd:0,hn:0,hf:0,com:0,bon:0,otr:0,pre:0,aho:0,odd:0};
+  return S.mov[k][id];
+}
+function movDe(id){ return movEn(clavePeriodo(), id); }
+function textoMes(){ return MESES[n(S.periodo.mes)-1]+' '+S.periodo.anio; }
+
+function calcISRmensual(base){
+  var t = S.isr;
+  for(var i=0;i<t.length;i++){
+    if(base <= n(t[i].hasta)){
+      if(i===0) return 0;
+      return (base - n(t[i].desde)) * n(t[i].tasa) + n(t[i].fija);
+    }
+  }
+  var u = t[t.length-1];
+  return (base - n(u.desde)) * n(u.tasa) + n(u.fija);
+}
+
+function calcular(e, mov){
+  var m = mov || movDe(e.id);
+  var afp = tasa('afp'), sfs = tasa('sfs'), srl = tasa('srl'), inf = tasa('infotep');
+  var sal = n(e.salario);
+  var activo = (e.estado === 'Activo') && sal > 0;
+
+  var valorHora = n(S.horas.ord) > 0 ? sal / (n(S.horas.ord)*2) : 0;
+
+  var r = {};
+  r.sueldoQ   = activo ? sal/2 : 0;
+  r.rdDia     = n(m.hd) * valorHora * (1 + n(S.horas.dia));
+  r.rdNoche   = n(m.hn) * valorHora * (1 + n(S.horas.dia) + n(S.horas.noc));
+  r.rdFeriado = n(m.hf) * valorHora * (1 + n(S.horas.fer));
+  r.ingresos  = r.sueldoQ + r.rdDia + r.rdNoche + r.rdFeriado + n(m.com) + n(m.bon) + n(m.otr);
+
+  r.afpEmp = activo ? Math.min(sal, n(afp.tope)) * n(afp.emp) / 2 : 0;
+  r.sfsEmp = activo ? Math.min(sal, n(sfs.tope)) * n(sfs.emp) / 2 : 0;
+
+  if(activo){
+    var baseISR = sal - Math.min(sal, n(afp.tope))*n(afp.emp) - Math.min(sal, n(sfs.tope))*n(sfs.emp);
+    r.isr = calcISRmensual(baseISR) / 2;
+  } else { r.isr = 0; }
+
+  r.deducciones = r.afpEmp + r.sfsEmp + r.isr + n(m.pre) + n(m.aho) + n(m.odd);
+  r.neto = r.ingresos - r.deducciones;
+
+  r.afpPat = activo ? Math.min(sal, n(afp.tope)) * n(afp.pat) / 2 : 0;
+  r.sfsPat = activo ? Math.min(sal, n(sfs.tope)) * n(sfs.pat) / 2 : 0;
+  r.srlPat = activo ? Math.min(sal, n(srl.tope)) * n(srl.pat) / 2 : 0;
+  r.infotep = activo ? sal * n(inf.pat) / 2 : 0;
+  r.costo = r.ingresos + r.afpPat + r.sfsPat + r.srlPat + r.infotep;
+  return r;
+}
+
+function cerrada(k){ return !!(S.cierres && S.cierres[k]); }
+
+function totalesEn(k){
+  if(cerrada(k)) return S.cierres[k].totales;
+  return calcularTotales(k);
+}
+
+function calcularTotales(k){
+  var t = {sueldoQ:0,rdDia:0,rdNoche:0,rdFeriado:0,com:0,bon:0,otr:0,ingresos:0,
+           afpEmp:0,sfsEmp:0,isr:0,pre:0,aho:0,odd:0,deducciones:0,neto:0,
+           afpPat:0,sfsPat:0,srlPat:0,infotep:0,costo:0,salario:0};
+  for(var i=0;i<S.empleados.length;i++){
+    var e = S.empleados[i], m = movEn(k, e.id), r = calcular(e, m);
+    t.salario += n(e.salario);
+    t.sueldoQ += r.sueldoQ; t.rdDia += r.rdDia; t.rdNoche += r.rdNoche; t.rdFeriado += r.rdFeriado;
+    t.com += n(m.com); t.bon += n(m.bon); t.otr += n(m.otr);
+    t.ingresos += r.ingresos;
+    t.afpEmp += r.afpEmp; t.sfsEmp += r.sfsEmp; t.isr += r.isr;
+    t.pre += n(m.pre); t.aho += n(m.aho); t.odd += n(m.odd);
+    t.deducciones += r.deducciones; t.neto += r.neto;
+    t.afpPat += r.afpPat; t.sfsPat += r.sfsPat; t.srlPat += r.srlPat; t.infotep += r.infotep;
+    t.costo += r.costo;
+  }
+  t.aportes = t.afpPat + t.sfsPat + t.srlPat + t.infotep;
+  t.tss = t.afpEmp + t.sfsEmp + t.afpPat + t.sfsPat + t.srlPat;
+  t.retenido = t.afpEmp + t.sfsEmp + t.isr;
+  return t;
+}
+function totales(){ return totalesEn(clavePeriodo()); }
+
+var CAMPOS_T = ['sueldoQ','rdDia','rdNoche','rdFeriado','com','bon','otr','ingresos','afpEmp','sfsEmp',
+  'isr','pre','aho','odd','deducciones','neto','afpPat','sfsPat','srlPat','infotep','costo','salario',
+  'aportes','tss','retenido'];
+function sumaT(a, b){
+  var r = {};
+  for(var i=0;i<CAMPOS_T.length;i++){ var f = CAMPOS_T[i]; r[f] = n(a[f]) + n(b[f]); }
+  return r;
+}
+function totalesMes(anio, mes){
+  return sumaT(totalesEn(clave(anio,mes,1)), totalesEn(clave(anio,mes,2)));
+}
+
+var CAMPOS_R = ['sueldoQ','rdDia','rdNoche','rdFeriado','ingresos','afpEmp','sfsEmp','isr',
+                'deducciones','neto','afpPat','sfsPat','srlPat','infotep','costo'];
+
+function fotoDe(k){
+  var tot = calcularTotales(k), filas = [];
+  S.empleados.forEach(function(e){
+    var m = movEn(k, e.id), r = calcular(e, m);
+    var f = {id:e.id, codigo:e.codigo, nombre:e.nombre, estado:e.estado, salario:n(e.salario),
+             cedula:e.cedula, cargo:e.cargo, banco:e.banco, tipo:e.tipo,
+             mov: JSON.parse(JSON.stringify(m))};
+    for(var i=0;i<CAMPOS_R.length;i++){ f[CAMPOS_R[i]] = r[CAMPOS_R[i]]; }
+    filas.push(f);
+  });
+  var hoy = new Date();
+  return {fecha: hoy.getFullYear()+'-'+dosDig(hoy.getMonth()+1)+'-'+dosDig(hoy.getDate()),
+          filas: filas, totales: tot};
+}
+
+function cerrarQuincena(){
+  var k = clavePeriodo();
+  if(cerrada(k)) return;
+  if(S.empleados.length === 0){ alert('No hay empleados para cerrar.'); return; }
+  if(!confirm('Cerrar '+textoPeriodo()+'?\n\nSe guarda una foto de los números de esta quincena. '+
+              'Después, aunque cambie un sueldo o quite un empleado, esta quincena no se altera.')) return;
+  S.cierres[k] = fotoDe(k);
+  guardar(); pintarTodo();
+}
+
+var DEMO_NOMBRES = ['Yamilex Batista Peña','Rosanna Féliz Mota','Claribel Santos Ureña',
+  'Wanda Jiménez Polanco','Ingrid Castillo Reyes','Mercedes Abreu Guzmán','Katherine Núñez Lora',
+  'Altagracia Vásquez Díaz','Dahiana Rosario Pujols','Scarlet Medina Encarnación'];
+var DEMO_CARGOS = ['Gerente de tienda','Gerente administrativa','Supervisora de caja','Cajera',
+  'Cajera','Auxiliar de almacén','Recepcionista','Asistente contable','Dependienta','Dependienta'];
+var DEMO_SUELDOS = [95000,78000,52000,26500,24800,22000,28000,46000,21500,19800];
+
+function cargarDemo(){
+  if(!confirm('Cargar una corrida de prueba con 10 empleadas y 5 quincenas?\n\n'+
+              'Se reemplaza todo lo que haya ahora. Use esto solo para ver cómo se comporta.')) return;
+  var base = estadoBase();
+  base.empresa = {nombre:'Comercial Las Mercedes SRL', rnc:'131-45678-9', tss:'D0000123456',
+                  tel:'809-555-0142', dir:'Av. Charles de Gaulle 45, Santo Domingo Este'};
+  base.periodo = {anio:2026, mes:3, q:1};
+  for(var i=0;i<10;i++){
+    base.empleados.push({
+      id:'D'+(i+1), codigo:'E'+dosDig(i+1), nombre:DEMO_NOMBRES[i], cedula:'001-000'+(1000+i)+'-'+(i+1),
+      cargo:DEMO_CARGOS[i], ingreso:'2024-0'+((i%9)+1)+'-15', salario:DEMO_SUELDOS[i],
+      estado:'Activo', banco:'Popular ****'+(4000+i*7), tipo: i<3 ? 'Transferencia' : 'Cheque', notas:''
+    });
+  }
+  var periodos = [[2026,1,1],[2026,1,2],[2026,2,1],[2026,2,2],[2026,3,1]];
+  var semilla = 7;
+  function az(max){ semilla = (semilla*9301+49297) % 233280; return Math.floor(semilla/233280*(max+1)); }
+  periodos.forEach(function(pp, idx){
+    var k = clave(pp[0], pp[1], pp[2]);
+    base.mov[k] = {};
+    base.empleados.forEach(function(e, j){
+      var m = {hd:0,hn:0,hf:0,com:0,bon:0,otr:0,pre:0,aho:0,odd:0};
+      if(j >= 3){ m.hd = az(12); }
+      if(j >= 5 && idx % 2 === 1){ m.hn = az(6); }
+      if(pp[2] === 2){ m.hf = az(8); }
+      if(j <= 2){ m.com = az(9) * 1500; }
+      if(pp[1] === 2 && pp[2] === 2){ m.bon = 5000; }
+      if(j === 4 || j === 8){ m.pre = 2500; }
+      if(j % 3 === 0){ m.aho = 1000; }
+      base.mov[k][e.id] = m;
+    });
+  });
+  S = base;
+  S.cierres = {};
+  for(var q=0; q<4; q++){
+    var kk = clave(periodos[q][0], periodos[q][1], periodos[q][2]);
+    S.cierres[kk] = fotoDe(kk);
+  }
+  guardar();
+  bindEmpresa(); bindHoras(); pintarTodo();
+  var botones = document.querySelectorAll('nav button');
+  for(var b=0;b<botones.length;b++){
+    if(botones[b].dataset.tab === 'anual') botones[b].click();
+  }
+}
+
+function reabrirQuincena(){
+  var k = clavePeriodo();
+  if(!cerrada(k)) return;
+  if(!confirm('Reabrir '+textoPeriodo()+'?\n\nSe borra la foto guardada y los números vuelven a calcularse '+
+              'con los sueldos de hoy. Si un sueldo cambió desde el cierre, esta quincena va a dar distinto.')) return;
+  delete S.cierres[k];
+  guardar(); pintarTodo();
+}
+
+function filasDelPeriodo(k){
+  if(cerrada(k)) return S.cierres[k].filas;
+  return S.empleados.map(function(e){
+    var m = movEn(k, e.id), r = calcular(e, m);
+    var f = {id:e.id, codigo:e.codigo, nombre:e.nombre, estado:e.estado, salario:n(e.salario),
+             cedula:e.cedula, cargo:e.cargo, banco:e.banco, tipo:e.tipo, mov:m, vivo:true};
+    for(var i=0;i<CAMPOS_R.length;i++){ f[CAMPOS_R[i]] = r[CAMPOS_R[i]]; }
+    return f;
+  });
+}
+
+
+var CAMPOS_R = ['sueldoQ','rdDia','rdNoche','rdFeriado','ingresos','afpEmp','sfsEmp','isr',
+                'deducciones','neto','afpPat','sfsPat','srlPat','infotep','costo'];
+
+function fotoDe(k){
+  var tot = calcularTotales(k), filas = [];
+  S.empleados.forEach(function(e){
+    var m = movEn(k, e.id), r = calcular(e, m);
+    var f = {id:e.id, codigo:e.codigo, nombre:e.nombre, estado:e.estado, salario:n(e.salario),
+             cedula:e.cedula, cargo:e.cargo, banco:e.banco, tipo:e.tipo,
+             mov: JSON.parse(JSON.stringify(m))};
+    for(var i=0;i<CAMPOS_R.length;i++){ f[CAMPOS_R[i]] = r[CAMPOS_R[i]]; }
+    filas.push(f);
+  });
+  var hoy = new Date();
+  return {fecha: hoy.getFullYear()+'-'+dosDig(hoy.getMonth()+1)+'-'+dosDig(hoy.getDate()),
+          filas: filas, totales: tot};
+}
+
+
+function filasDelPeriodo(k){
+  if(cerrada(k)) return S.cierres[k].filas;
+  return S.empleados.map(function(e){
+    var m = movEn(k, e.id), r = calcular(e, m);
+    var f = {id:e.id, codigo:e.codigo, nombre:e.nombre, estado:e.estado, salario:n(e.salario),
+             cedula:e.cedula, cargo:e.cargo, banco:e.banco, tipo:e.tipo, mov:m, vivo:true};
+    for(var i=0;i<CAMPOS_R.length;i++){ f[CAMPOS_R[i]] = r[CAMPOS_R[i]]; }
+    return f;
+  });
+}
+
+
+function cerrarQuincena(){
+  var k = clavePeriodo();
+  if(cerrada(k)) return;
+  if(S.empleados.length === 0){ alert('No hay empleados para cerrar.'); return; }
+  if(!confirm('Cerrar '+textoPeriodo()+'?\n\nSe guarda una foto de los números de esta quincena. '+
+              'Después, aunque cambie un sueldo o dé de baja a alguien, esta quincena no se altera.')) return;
+  S.cierres[k] = fotoDe(k);
+  guardar(); pintarTodo();
+}
+
+function reabrirQuincena(){
+  var k = clavePeriodo();
+  if(!cerrada(k)) return;
+  if(!confirm('Reabrir '+textoPeriodo()+'?\n\nSe borra la foto guardada y los números vuelven a calcularse '+
+              'con los sueldos de hoy. Si un sueldo cambió desde el cierre, esta quincena va a dar distinto.')) return;
+  delete S.cierres[k];
+  guardar(); pintarTodo();
+}
+
+var DEMO_NOMBRES = ['Yamilex Batista Peña','Rosanna Féliz Mota','Claribel Santos Ureña',
+  'Wanda Jiménez Polanco','Ingrid Castillo Reyes','Mercedes Abreu Guzmán','Katherine Núñez Lora',
+  'Altagracia Vásquez Díaz','Dahiana Rosario Pujols','Scarlet Medina Encarnación'];
+var DEMO_CARGOS = ['Gerente de tienda','Gerente administrativa','Supervisora de caja','Cajera','Cajera',
+  'Auxiliar de almacén','Recepcionista','Asistente contable','Dependienta','Dependienta'];
+var DEMO_SUELDOS = [95000,78000,52000,26500,24800,22000,28000,46000,21500,19800];
+
+function cargarDemo(){
+  if(!confirm('Cargar una corrida de prueba con 10 empleadas y 5 quincenas?\n\nSe reemplaza todo lo que haya ahora.')) return;
+  respaldoAutomatico();
+  var base = estadoBase();
+  base.empresa = {nombre:'Comercial Las Mercedes SRL', rnc:'131-45678-9', tss:'D0000123456',
+                  tel:'809-555-0142', dir:'Av. Charles de Gaulle 45, Santo Domingo Este'};
+  base.periodo = {anio:2026, mes:3, q:1};
+  for(var i=0;i<10;i++){
+    base.empleados.push({id:'D'+(i+1), codigo:'E'+dosDig(i+1), nombre:DEMO_NOMBRES[i],
+      cedula:'001-000'+(1000+i)+'-'+(i+1), cargo:DEMO_CARGOS[i], ingreso:'2024-0'+((i%9)+1)+'-15',
+      salario:DEMO_SUELDOS[i], estado:'Activo', banco:'Popular ****'+(4000+i*7),
+      tipo: i < 3 ? 'Transferencia' : 'Cheque', notas:''});
+  }
+  var periodos = [[2026,1,1],[2026,1,2],[2026,2,1],[2026,2,2],[2026,3,1]];
+  var semilla = 7;
+  function az(max){ semilla = (semilla*9301+49297) % 233280; return Math.floor(semilla/233280*(max+1)); }
+  periodos.forEach(function(pp, idx){
+    var k = clave(pp[0], pp[1], pp[2]);
+    base.mov[k] = {};
+    base.empleados.forEach(function(e, j){
+      var m = {hd:0,hn:0,hf:0,com:0,bon:0,otr:0,pre:0,aho:0,odd:0};
+      if(j >= 3) m.hd = az(12);
+      if(j >= 5 && idx % 2 === 1) m.hn = az(6);
+      if(pp[2] === 2) m.hf = az(8);
+      if(j <= 2) m.com = az(9) * 1500;
+      if(pp[1] === 2 && pp[2] === 2) m.bon = 5000;
+      if(j === 4 || j === 8) m.pre = 2500;
+      if(j % 3 === 0) m.aho = 1000;
+      base.mov[k][e.id] = m;
+    });
+  });
+  S = base;
+  S.cierres = {};
+  for(var q = 0; q < 4; q++){
+    var kk = clave(periodos[q][0], periodos[q][1], periodos[q][2]);
+    S.cierres[kk] = fotoDe(kk);
+  }
+  guardar();
+  bindAjustes(); pintarTodo(); tab('resumen');
+}
+
+function tab(nombre){
+  var bs = document.querySelectorAll('nav button');
+  for(var i=0;i<bs.length;i++){
+    bs[i].classList.toggle('on', bs[i].dataset.tab === nombre);
+  }
+  var ss = document.querySelectorAll('main section');
+  for(var j=0;j<ss.length;j++){ ss[j].classList.remove('on'); }
+  document.getElementById('tab-'+nombre).classList.add('on');
+  window.scrollTo(0,0);
+}
+(function(){
+  var bs = document.querySelectorAll('nav button');
+  for(var i=0;i<bs.length;i++){
+    (function(b){ b.onclick = function(){ tab(b.dataset.tab); pintarTodo(); }; })(bs[i]);
+  }
+})();
+
+function opcion(valor, texto, sel){
+  var o = document.createElement('option');
+  o.value = valor; o.textContent = texto;
+  if(String(valor) === String(sel)) o.selected = true;
+  return o;
+}
+
+function selectoresPeriodo(cont, campos){
+  cont.innerHTML = '';
+  function caja(titulo, sel){
+    var d = document.createElement('div');
+    var s = document.createElement('span'); s.textContent = titulo;
+    d.appendChild(s); d.appendChild(sel); cont.appendChild(d);
+  }
+  if(campos.indexOf('anio') >= 0){
+    var sa = document.createElement('select');
+    for(var y = 2025; y <= 2031; y++){ sa.appendChild(opcion(y, y, S.periodo.anio)); }
+    sa.onchange = function(){ S.periodo.anio = n(sa.value); guardar(); pintarTodo(); };
+    caja('Año', sa);
+  }
+  if(campos.indexOf('mes') >= 0){
+    var sm = document.createElement('select');
+    for(var m = 1; m <= 12; m++){ sm.appendChild(opcion(m, MESES[m-1], S.periodo.mes)); }
+    sm.onchange = function(){ S.periodo.mes = n(sm.value); guardar(); pintarTodo(); };
+    caja('Mes', sm);
+  }
+  if(campos.indexOf('q') >= 0){
+    var sq = document.createElement('select');
+    sq.appendChild(opcion(1, 'Primera, del 1 al 15', S.periodo.q));
+    sq.appendChild(opcion(2, 'Segunda, del 16 al fin', S.periodo.q));
+    sq.onchange = function(){ S.periodo.q = n(sq.value); guardar(); pintarTodo(); };
+    caja('Quincena', sq);
+  }
+}
+
+var CAMPOS_ING = [['hd','Horas extra diurnas'],['hn','Horas extra nocturnas'],['hf','Horas feriado o domingo'],
+                  ['com','Comisiones RD$'],['bon','Bonos RD$'],['otr','Otros ingresos RD$']];
+var CAMPOS_DED = [['pre','Préstamo RD$'],['aho','Ahorro o cooperativa RD$'],['odd','Otras deducciones RD$']];
+
+function empleadoDelPanel(){
+  var id = document.getElementById('capEmpleado').value;
+  for(var i=0;i<S.empleados.length;i++){ if(S.empleados[i].id === id) return S.empleados[i]; }
+  return null;
+}
+
+function pintarSelectEmpleado(){
+  var sel = document.getElementById('capEmpleado');
+  var actual = sel.value;
+  sel.innerHTML = '';
+  filasDelPeriodo(clavePeriodo()).forEach(function(f){
+    sel.appendChild(opcion(f.id, (f.codigo ? f.codigo+' · ' : '') + (f.nombre || 'Sin nombre') +
+      (f.estado === 'Activo' ? '' : ' (inactivo)'), actual));
+  });
+  if(actual && sel.value !== actual && sel.options.length) sel.selectedIndex = 0;
+}
+
+function moverEmpleado(paso){
+  var sel = document.getElementById('capEmpleado');
+  if(!sel.options.length) return;
+  var i = sel.selectedIndex + paso;
+  if(i < 0) i = sel.options.length - 1;
+  if(i >= sel.options.length) i = 0;
+  sel.selectedIndex = i;
+  pintarCampos();
+}
+
+function pintarCampos(){
+  var ing = document.getElementById('capIngresos');
+  var ded = document.getElementById('capDeducciones');
+  var res = document.getElementById('capResultado');
+  ing.innerHTML = ''; ded.innerHTML = '';
+  var k = clavePeriodo();
+  var id = document.getElementById('capEmpleado').value;
+  var fila = null;
+  filasDelPeriodo(k).forEach(function(f){ if(f.id === id) fila = f; });
+  if(!fila){
+    res.innerHTML = '<div><span>Agregue empleados en la pestaña Empleados.</span></div>';
+    document.getElementById('btnRecibo').disabled = true;
+    return;
+  }
+  document.getElementById('btnRecibo').disabled = false;
+  if(cerrada(k)){
+    res.innerHTML = '<div><span>Quincena cerrada. Los movimientos no se editan hasta reabrirla.</span></div>';
+    resultado(fila, true);
+    return;
+  }
+  var e = empleadoDelPanel();
+  var m = movEn(k, id);
+  function bloque(cont, lista){
+    lista.forEach(function(c){
+      var l = document.createElement('label'); l.textContent = c[1];
+      var inp = document.createElement('input');
+      inp.type = 'number'; inp.step = 'any'; inp.value = m[c[0]];
+      inp.onfocus = function(){ inp.select(); };
+      inp.oninput = function(){
+        m[c[0]] = n(inp.value);
+        guardar();
+        pintarTablaNomina(); pintarResumen();
+        resultado(calcular(e, m));
+      };
+      cont.appendChild(l); cont.appendChild(inp);
+    });
+  }
+  bloque(ing, CAMPOS_ING);
+  bloque(ded, CAMPOS_DED);
+  resultado(calcular(e, m));
+}
+
+function resultado(r){
+  document.getElementById('capResultado').innerHTML =
+    '<div><span>Sueldo de la quincena</span><b>'+money(r.sueldoQ)+'</b></div>'+
+    '<div><span>Horas extra y feriado</span><b>'+money(r.rdDia+r.rdNoche+r.rdFeriado)+'</b></div>'+
+    '<div><span>Total ingresos</span><b>'+money(r.ingresos)+'</b></div>'+
+    '<div><span>Total descuentos</span><b>'+money(r.deducciones)+'</b></div>'+
+    '<div><span>Neto a pagar</span><b>'+money(r.neto)+'</b></div>';
+}
+
+function pintarTablaNomina(){
+  var k = clavePeriodo(), tb = document.getElementById('tbNom');
+  tb.innerHTML = '';
+  var filas = filasDelPeriodo(k);
+  if(filas.length === 0){
+    tb.innerHTML = '<tr><td colspan="24" class="txt">No hay empleados cargados.</td></tr>';
+    document.getElementById('tfNom').innerHTML = '';
+    return;
+  }
+  filas.forEach(function(f, idx){
+    var m = f.mov, tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td class="calc">'+(idx+1)+'</td>'+
+      '<td class="txt">'+(f.nombre||'')+(f.estado==='Activo'?'':' (inactivo)')+'</td>'+
+      '<td class="calc">'+money(f.salario)+'</td>'+
+      '<td class="calc">'+money(f.sueldoQ)+'</td>'+
+      '<td class="calc">'+money(f.rdDia)+'</td>'+
+      '<td class="calc">'+money(f.rdNoche)+'</td>'+
+      '<td class="calc">'+money(f.rdFeriado)+'</td>'+
+      '<td class="calc">'+money(m.com)+'</td>'+
+      '<td class="calc">'+money(m.bon)+'</td>'+
+      '<td class="calc">'+money(m.otr)+'</td>'+
+      '<td class="calc">'+money(f.ingresos)+'</td>'+
+      '<td class="calc">'+money(f.afpEmp)+'</td>'+
+      '<td class="calc">'+money(f.sfsEmp)+'</td>'+
+      '<td class="calc">'+money(f.isr)+'</td>'+
+      '<td class="calc">'+money(m.pre)+'</td>'+
+      '<td class="calc">'+money(m.aho)+'</td>'+
+      '<td class="calc">'+money(m.odd)+'</td>'+
+      '<td class="calc">'+money(f.deducciones)+'</td>'+
+      '<td class="calc"><b>'+money(f.neto)+'</b></td>'+
+      '<td class="calc">'+money(f.afpPat)+'</td>'+
+      '<td class="calc">'+money(f.sfsPat)+'</td>'+
+      '<td class="calc">'+money(f.srlPat)+'</td>'+
+      '<td class="calc">'+money(f.infotep)+'</td>'+
+      '<td class="calc">'+money(f.costo)+'</td>';
+    tr.onclick = function(){
+      if(cerrada(clavePeriodo())) return;
+      document.getElementById('capEmpleado').value = f.id;
+      pintarCampos();
+      window.scrollTo(0,0);
+    };
+    tb.appendChild(tr);
+  });
+  var t = totalesEn(k);
+  document.getElementById('tfNom').innerHTML =
+    '<tr class="tot"><td class="lbl" colspan="2">Totales de la quincena</td>'+
+    '<td>'+money(t.salario)+'</td><td>'+money(t.sueldoQ)+'</td>'+
+    '<td>'+money(t.rdDia)+'</td><td>'+money(t.rdNoche)+'</td><td>'+money(t.rdFeriado)+'</td>'+
+    '<td>'+money(t.com)+'</td><td>'+money(t.bon)+'</td><td>'+money(t.otr)+'</td>'+
+    '<td>'+money(t.ingresos)+'</td><td>'+money(t.afpEmp)+'</td><td>'+money(t.sfsEmp)+'</td><td>'+money(t.isr)+'</td>'+
+    '<td>'+money(t.pre)+'</td><td>'+money(t.aho)+'</td><td>'+money(t.odd)+'</td>'+
+    '<td>'+money(t.deducciones)+'</td><td>'+money(t.neto)+'</td>'+
+    '<td>'+money(t.afpPat)+'</td><td>'+money(t.sfsPat)+'</td><td>'+money(t.srlPat)+'</td>'+
+    '<td>'+money(t.infotep)+'</td><td>'+money(t.costo)+'</td></tr>';
+}
+
+function pintarEstadoQuincena(){
+  var k = clavePeriodo(), cer = cerrada(k);
+  var aviso = document.getElementById('avisoCierre');
+  if(cer){
+    aviso.style.display = 'block';
+    aviso.textContent = 'Quincena cerrada el '+S.cierres[k].fecha+'. Los números están congelados: '+
+      'aunque cambie un sueldo o dé de baja a alguien, esta quincena queda como se pagó.';
+  } else {
+    aviso.style.display = 'none';
+  }
+  document.getElementById('btnCerrarQ').style.display = cer ? 'none' : '';
+  document.getElementById('btnReabrirQ').style.display = cer ? '' : 'none';
+  var mas = document.getElementById('masNomina');
+  for(var i=0;i<mas.options.length;i++){
+    var v = mas.options[i].value;
+    mas.options[i].disabled = cer && (v === 'copiar' || v === 'limpiar');
+  }
+}
+
+var LINEAS_RES = [
+  ['Total ingresos brutos','ingresos',0],['AFP empleado','afpEmp',0],['SFS empleado','sfsEmp',0],
+  ['ISR','isr',0],['Total descuentos','deducciones',1],['NETO A PAGAR','neto',2],
+  ['AFP empresa','afpPat',1],['SFS empresa','sfsPat',0],['SRL empresa','srlPat',0],['INFOTEP','infotep',0],
+  ['Total aportes de la empresa','aportes',2],['A depositar en TSS','tss',1],
+  ['A reportar de ISR','isr',0],['COSTO TOTAL DE NÓMINA','costo',2]
+];
+
+function vista(){ return document.getElementById('vistaResumen').value; }
+
+function pintarResumen(){
+  var v = vista();
+  selectoresPeriodo(document.getElementById('selResumen'),
+    v === 'anio' ? ['anio'] : (v === 'mes' ? ['anio','mes'] : ['anio','mes','q']));
+  var cont = document.getElementById('cuerpoResumen');
+  if(v === 'anio'){ cont.innerHTML = htmlAnual(); return; }
+  var q1, q2, mes, h;
+  if(v === 'quincena'){
+    var t = totalesEn(clavePeriodo());
+    h = '<div class="tablewrap"><table class="res"><thead><tr><th>Concepto</th><th>'+textoPeriodo()+'</th></tr></thead><tbody>';
+    LINEAS_RES.forEach(function(l){
+      h += '<tr class="'+(l[2]===2?'fuerte':'')+(l[2]>=1?' sep':'')+'"><td>'+l[0]+'</td><td>'+money(t[l[1]])+'</td></tr>';
+    });
+    h += '</tbody></table></div>';
+  } else {
+    q1 = totalesEn(clave(S.periodo.anio, S.periodo.mes, 1));
+    q2 = totalesEn(clave(S.periodo.anio, S.periodo.mes, 2));
+    mes = sumaT(q1, q2);
+    h = '<div class="tablewrap"><table class="res"><thead><tr><th>Concepto de '+textoMes()+
+        '</th><th>Quincena 1</th><th>Quincena 2</th><th>Mes completo</th></tr></thead><tbody>';
+    LINEAS_RES.forEach(function(l){
+      h += '<tr class="'+(l[2]===2?'fuerte':'')+(l[2]>=1?' sep':'')+'"><td>'+l[0]+'</td><td>'+
+           money(q1[l[1]])+'</td><td>'+money(q2[l[1]])+'</td><td>'+money(mes[l[1]])+'</td></tr>';
+    });
+    h += '</tbody></table></div>';
+  }
+  cont.innerHTML = h;
+}
+
+function datosAnual(){
+  var meses = [], anio = null, netoQ1 = 0, netoQ2 = 0, mayor = 0, mesMayor = '', con = 0;
+  for(var i=1;i<=12;i++){
+    var q1 = totalesEn(clave(S.periodo.anio, i, 1));
+    var q2 = totalesEn(clave(S.periodo.anio, i, 2));
+    var t = sumaT(q1, q2);
+    meses.push({nombre:MESES[i-1], q1:q1, q2:q2, t:t});
+    anio = anio ? sumaT(anio, t) : t;
+    netoQ1 += q1.neto; netoQ2 += q2.neto;
+    if(t.costo > 0) con++;
+    if(t.costo > mayor){ mayor = t.costo; mesMayor = MESES[i-1]; }
+  }
+  return {meses:meses, anio:anio, netoQ1:netoQ1, netoQ2:netoQ2, mayor:mayor, mesMayor:mesMayor, con:con};
+}
+
+function htmlAnual(){
+  var d = datosAnual();
+  var h = '<div class="tablewrap"><table class="res"><thead><tr><th>Mes de '+S.periodo.anio+
+    '</th><th>Neto quincena 1</th><th>Neto quincena 2</th><th>Neto del mes</th><th>Ingresos brutos</th>'+
+    '<th>Retenido</th><th>Aportes empresa</th><th>A depositar TSS</th><th>ISR</th><th>Costo del mes</th></tr></thead><tbody>';
+  d.meses.forEach(function(m){
+    var act = (m.nombre === MESES[n(S.periodo.mes)-1]);
+    h += '<tr'+(act ? ' class="sep"' : '')+'><td>'+m.nombre+'</td><td>'+money(m.q1.neto)+'</td><td>'+money(m.q2.neto)+
+         '</td><td><b>'+money(m.t.neto)+'</b></td><td>'+money(m.t.ingresos)+'</td><td>'+money(m.t.retenido)+
+         '</td><td>'+money(m.t.aportes)+'</td><td>'+money(m.t.tss)+'</td><td>'+money(m.t.isr)+
+         '</td><td><b>'+money(m.t.costo)+'</b></td></tr>';
+  });
+  h += '<tr class="fuerte"><td>TOTAL DEL AÑO</td><td>'+money(d.netoQ1)+'</td><td>'+money(d.netoQ2)+
+       '</td><td>'+money(d.anio.neto)+'</td><td>'+money(d.anio.ingresos)+'</td><td>'+money(d.anio.retenido)+
+       '</td><td>'+money(d.anio.aportes)+'</td><td>'+money(d.anio.tss)+'</td><td>'+money(d.anio.isr)+
+       '</td><td>'+money(d.anio.costo)+'</td></tr>';
+  h += '</tbody></table></div>';
+  h += '<div class="note">Promedio mensual de costo: RD$ '+money(d.con ? d.anio.costo/d.con : 0)+
+       '. Mes más caro: '+(d.mesMayor || 'ninguno')+', RD$ '+money(d.mayor)+
+       '. Los meses que todavía no se han pagado se muestran como estimado del sueldo fijo.</div>';
+  return h;
+}
+
+function pintarTasas(){
+  var tb = document.getElementById('tbTasas');
+  tb.innerHTML = '';
+  S.tasas.forEach(function(t, idx){
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td class="txt">'+t.nombre+'</td>'+
+      '<td class="edit"><input class="num" type="number" step="any" data-f="emp"></td>'+
+      '<td class="edit"><input class="num" type="number" step="any" data-f="pat"></td>'+
+      (t.id === 'infotep' ? '<td class="calc">Sin tope</td>'
+        : '<td class="edit"><input class="num" type="number" step="any" data-f="tope"></td>');
+    tb.appendChild(tr);
+    var ins = tr.querySelectorAll('input');
+    for(var i=0;i<ins.length;i++){
+      (function(el){
+        el.value = S.tasas[idx][el.dataset.f];
+        el.oninput = function(){ S.tasas[idx][el.dataset.f] = n(el.value); guardar(); pintarTablaNomina(); pintarResumen(); };
+      })(ins[i]);
+    }
+  });
+}
+
+function pintarISR(){
+  var tb = document.getElementById('tbISR');
+  tb.innerHTML = '';
+  S.isr.forEach(function(f, idx){
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td class="edit"><input class="num" type="number" step="any" data-f="desde"></td>'+
+                   '<td class="edit"><input class="num" type="number" step="any" data-f="hasta"></td>'+
+                   '<td class="edit"><input class="num" type="number" step="any" data-f="tasa"></td>'+
+                   '<td class="edit"><input class="num" type="number" step="any" data-f="fija"></td>';
+    tb.appendChild(tr);
+    var ins = tr.querySelectorAll('input');
+    for(var i=0;i<ins.length;i++){
+      (function(el){
+        el.value = S.isr[idx][el.dataset.f];
+        el.oninput = function(){ S.isr[idx][el.dataset.f] = n(el.value); guardar(); pintarTablaNomina(); pintarResumen(); };
+      })(ins[i]);
+    }
+  });
+}
+
+function tieneHistorial(id){
+  for(var k in S.cierres){ 
+    var fs = S.cierres[k].filas;
+    for(var i=0;i<fs.length;i++){ if(fs[i].id === id) return true; }
+  }
+  for(var k2 in S.mov){
+    var m = S.mov[k2][id];
+    if(m){ for(var c in m){ if(n(m[c]) !== 0) return true; } }
+  }
+  return false;
+}
+
+function pintarEmpleados(){
+  var tb = document.getElementById('tbEmp');
+  tb.innerHTML = '';
+  if(S.empleados.length === 0){
+    tb.innerHTML = '<tr><td colspan="12" class="txt">No hay empleados. Use el botón Agregar empleado.</td></tr>';
+    return;
+  }
+  S.empleados.forEach(function(e, idx){
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td class="calc">'+(idx+1)+'</td>'+
+      '<td class="edit"><input data-f="codigo"></td>'+
+      '<td class="edit"><input data-f="nombre" style="min-width:220px"></td>'+
+      '<td class="edit"><input data-f="cedula"></td>'+
+      '<td class="edit"><input data-f="cargo"></td>'+
+      '<td class="edit"><input data-f="ingreso" type="date"></td>'+
+      '<td class="edit"><input data-f="salario" class="num" type="number" step="any"></td>'+
+      '<td class="edit"><select data-f="estado"><option>Activo</option><option>Inactivo</option></select></td>'+
+      '<td class="edit"><input data-f="banco"></td>'+
+      '<td class="edit"><select data-f="tipo"><option>Transferencia</option><option>Cheque</option><option>Efectivo</option></select></td>'+
+      '<td class="edit"><input data-f="notas"></td>'+
+      '<td class="txt noprint"><button class="act" style="margin:0;padding:8px 12px">Eliminar</button></td>';
+    tb.appendChild(tr);
+    var campos = tr.querySelectorAll('[data-f]');
+    for(var i=0;i<campos.length;i++){
+      (function(el){
+        var f = el.dataset.f;
+        el.value = e[f] || (f === 'salario' ? 0 : '');
+        el[el.tagName === 'SELECT' ? 'onchange' : 'oninput'] = function(){
+          e[f] = (f === 'salario') ? n(el.value) : el.value;
+          guardar();
+          pintarTablaNomina(); pintarResumen(); pintarSelectEmpleado(); pintarEstadoQuincena();
+        };
+      })(campos[i]);
+    }
+    tr.querySelector('button').onclick = function(){
+      if(tieneHistorial(e.id)){
+        alert((e.nombre || 'Este empleado')+' ya tiene quincenas con movimientos o cerradas.\n\n'+
+              'No se elimina, porque se perderían esos pagos. Póngale Estado = Inactivo y deja de salir en la nómina.');
+        return;
+      }
+      if(!confirm('Eliminar a '+(e.nombre || 'este empleado')+'? No tiene movimientos registrados.')) return;
+      S.empleados.splice(idx, 1);
+      guardar(); pintarTodo();
+    };
+  });
+}
+
+function bajarArchivo(nombre, texto, tipo){
+  var b = new Blob(['\ufeff'+texto], {type: tipo || 'text/csv;charset=utf-8;'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(b);
+  a.download = nombre;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+function csvCampo(v){ return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'; }
+function num2(v){ return typeof v === 'number' ? Math.round(v*100)/100 : v; }
+
+function respaldoAutomatico(){
+  if(S.empleados.length === 0) return;
+  bajarArchivo('respaldo_antes_de_borrar_'+clavePeriodo()+'.json', JSON.stringify(S, null, 2), 'application/json');
+}
+
+function csvQuincena(){
+  var h = ['No.','Codigo','Nombre','Estado','Sueldo mensual','Sueldo 1/2','Hrs dia','RD$ dia','Hrs noche','RD$ noche',
+    'Hrs feriado','RD$ feriado','Comisiones','Bonos','Otros','Total ingresos','AFP','SFS','ISR','Prestamo','Ahorro',
+    'Otras deducc.','Total deducc.','NETO','AFP empresa','SFS empresa','SRL','INFOTEP','Costo empresa'];
+  var l = [h.map(csvCampo).join(';')];
+  filasDelPeriodo(clavePeriodo()).forEach(function(f, i){
+    var m = f.mov;
+    l.push([i+1,f.codigo,f.nombre,f.estado,f.salario,f.sueldoQ,m.hd,f.rdDia,m.hn,f.rdNoche,m.hf,f.rdFeriado,
+      m.com,m.bon,m.otr,f.ingresos,f.afpEmp,f.sfsEmp,f.isr,m.pre,m.aho,m.odd,f.deducciones,f.neto,
+      f.afpPat,f.sfsPat,f.srlPat,f.infotep,f.costo].map(num2).map(csvCampo).join(';'));
+  });
+  bajarArchivo('nomina_'+clavePeriodo()+'.csv', l.join('\n'));
+}
+
+function csvResumen(){
+  var v = vista();
+  if(v === 'anio'){
+    var d = datosAnual();
+    var l = [['Mes','Neto Q1','Neto Q2','Neto del mes','Ingresos brutos','Retenido','Aportes empresa',
+              'A depositar TSS','ISR','Costo del mes'].map(csvCampo).join(';')];
+    d.meses.forEach(function(m){
+      l.push([m.nombre,m.q1.neto,m.q2.neto,m.t.neto,m.t.ingresos,m.t.retenido,m.t.aportes,m.t.tss,m.t.isr,m.t.costo]
+        .map(num2).map(csvCampo).join(';'));
+    });
+    bajarArchivo('resumen_anual_'+S.periodo.anio+'.csv', l.join('\n'));
+    return;
+  }
+  var q1 = totalesEn(clave(S.periodo.anio, S.periodo.mes, 1));
+  var q2 = totalesEn(clave(S.periodo.anio, S.periodo.mes, 2));
+  var mes = sumaT(q1, q2);
+  var uno = (v === 'quincena');
+  var enc = uno ? ['Concepto', textoPeriodo()] : ['Concepto','Quincena 1','Quincena 2','Mes completo'];
+  var li = [enc.map(csvCampo).join(';')];
+  var t = uno ? totalesEn(clavePeriodo()) : null;
+  LINEAS_RES.forEach(function(x){
+    var fila = uno ? [x[0], t[x[1]]] : [x[0], q1[x[1]], q2[x[1]], mes[x[1]]];
+    li.push(fila.map(num2).map(csvCampo).join(';'));
+  });
+  bajarArchivo('resumen_'+(uno ? clavePeriodo() : S.periodo.anio+'-'+S.periodo.mes)+'.csv', li.join('\n'));
+}
+
+function imprimirRecibo(){
+  var k = clavePeriodo(), id = document.getElementById('capEmpleado').value, f = null;
+  filasDelPeriodo(k).forEach(function(x){ if(x.id === id) f = x; });
+  if(!f) return;
+  var m = f.mov;
+  var h = '<div class="recibo">';
+  h += '<h3>'+(S.empresa.nombre || 'Empresa')+'</h3>';
+  h += '<div class="note">RNC '+(S.empresa.rnc || '')+'</div>';
+  h += '<div class="note">Recibo de pago quincenal · '+textoPeriodo()+'</div><div style="height:14px"></div>';
+  h += '<div class="line"><span>Empleado</span><span>'+(f.nombre||'')+'</span></div>';
+  h += '<div class="line"><span>Cédula</span><span>'+(f.cedula||'')+'</span></div>';
+  h += '<div class="line"><span>Cargo</span><span>'+(f.cargo||'')+'</span></div>';
+  h += '<div class="line"><span>Forma de pago</span><span>'+(f.tipo||'')+' '+(f.banco||'')+'</span></div>';
+  h += '<div style="height:14px"></div>';
+  h += '<div class="line"><span>Sueldo quincena</span><span>'+money(f.sueldoQ)+'</span></div>';
+  h += '<div class="line"><span>Horas extra y feriado</span><span>'+money(f.rdDia+f.rdNoche+f.rdFeriado)+'</span></div>';
+  h += '<div class="line"><span>Comisiones, bonos y otros</span><span>'+money(n(m.com)+n(m.bon)+n(m.otr))+'</span></div>';
+  h += '<div class="line sum"><span>Total ingresos</span><span>'+money(f.ingresos)+'</span></div>';
+  h += '<div style="height:14px"></div>';
+  h += '<div class="line"><span>AFP</span><span>'+money(f.afpEmp)+'</span></div>';
+  h += '<div class="line"><span>SFS</span><span>'+money(f.sfsEmp)+'</span></div>';
+  h += '<div class="line"><span>ISR</span><span>'+money(f.isr)+'</span></div>';
+  h += '<div class="line"><span>Préstamos, ahorros y otros</span><span>'+money(n(m.pre)+n(m.aho)+n(m.odd))+'</span></div>';
+  h += '<div class="line sum"><span>Total descuentos</span><span>'+money(f.deducciones)+'</span></div>';
+  h += '<div style="height:14px"></div>';
+  h += '<div class="line sum" style="font-size:20px"><span>Neto pagado</span><span>RD$ '+money(f.neto)+'</span></div>';
+  h += '<div class="firma">Recibí conforme: ______________________________    Fecha: ____________</div></div>';
+  document.getElementById('zonaRecibo').innerHTML = h;
+  document.body.classList.add('reciboSolo');
+  window.print();
+  setTimeout(function(){ document.body.classList.remove('reciboSolo'); }, 500);
+}
+
+function copiarQuincenaAnterior(){
+  var a = n(S.periodo.anio), mm = n(S.periodo.mes), q = n(S.periodo.q);
+  var pa = a, pm = mm, pq = q - 1;
+  if(pq === 0){ pq = 2; pm = mm - 1; if(pm === 0){ pm = 12; pa = a - 1; } }
+  var origen = S.mov[clave(pa, pm, pq)];
+  if(!origen){ alert('La quincena anterior ('+MESES[pm-1]+', quincena '+pq+') no tiene nada digitado.'); return; }
+  if(!confirm('Traer los movimientos de '+MESES[pm-1]+' quincena '+pq+'?\n\nSe reemplaza lo que haya en esta quincena.')) return;
+  S.mov[clavePeriodo()] = JSON.parse(JSON.stringify(origen));
+  guardar(); pintarTodo();
+}
+
+function limpiarQuincena(){
+  if(!confirm('Borrar horas extra, bonos y descuentos de '+textoPeriodo()+'?')) return;
+  S.mov[clavePeriodo()] = {};
+  guardar(); pintarTodo();
+}
+
+document.getElementById('masNomina').onchange = function(){
+  var v = this.value;
+  this.selectedIndex = 0;
+  if(v === 'copiar') copiarQuincenaAnterior();
+  else if(v === 'limpiar') limpiarQuincena();
+  else if(v === 'csv') csvQuincena();
+  else if(v === 'print') window.print();
+};
+document.getElementById('btnCerrarQ').onclick = cerrarQuincena;
+document.getElementById('btnReabrirQ').onclick = reabrirQuincena;
+document.getElementById('btnRecibo').onclick = imprimirRecibo;
+document.getElementById('btnPrev').onclick = function(){ moverEmpleado(-1); };
+document.getElementById('btnNext').onclick = function(){ moverEmpleado(1); };
+document.getElementById('capEmpleado').onchange = pintarCampos;
+document.getElementById('vistaResumen').onchange = pintarResumen;
+document.getElementById('btnResCSV').onclick = csvResumen;
+document.getElementById('btnResPrint').onclick = function(){ window.print(); };
+
+document.getElementById('btnAddEmp').onclick = function(){
+  S.empleados.push({id:'E'+Date.now()+Math.floor(Math.random()*1000), codigo:'', nombre:'', cedula:'',
+    cargo:'', ingreso:'', salario:0, estado:'Activo', banco:'', tipo:'Transferencia', notas:''});
+  guardar(); pintarTodo();
+};
+document.getElementById('btnEmpCSV').onclick = function(){
+  var h = ['No.','Codigo','Nombre','Cedula','Cargo','Fecha ingreso','Salario mensual','Estado','Cuenta banco','Tipo pago','Notas'];
+  var l = [h.map(csvCampo).join(';')];
+  S.empleados.forEach(function(e, i){
+    l.push([i+1,e.codigo,e.nombre,e.cedula,e.cargo,e.ingreso,e.salario,e.estado,e.banco,e.tipo,e.notas].map(csvCampo).join(';'));
+  });
+  bajarArchivo('empleados.csv', l.join('\n'));
+};
+
+document.getElementById('btnExport').onclick = function(){
+  bajarArchivo('respaldo_nomina_'+clavePeriodo()+'.json', JSON.stringify(S, null, 2), 'application/json');
+};
+document.getElementById('btnImportBtn').onclick = function(){ document.getElementById('fileImport').click(); };
+document.getElementById('fileImport').onchange = function(ev){
+  var f = ev.target.files[0];
+  if(!f) return;
+  var lector = new FileReader();
+  lector.onload = function(){
+    try{
+      var d = JSON.parse(lector.result);
+      if(!d.empleados || !d.tasas) throw new Error('formato');
+      respaldoAutomatico();
+      S = d;
+      if(!S.cierres) S.cierres = {};
+      guardar(); bindAjustes(); pintarTodo();
+      alert('Respaldo cargado.');
+    }catch(err){ alert('El archivo no es un respaldo válido de esta aplicación.'); }
+    ev.target.value = '';
+  };
+  lector.readAsText(f);
+};
+document.getElementById('btnDemo').onclick = cargarDemo;
+document.getElementById('btnReset').onclick = function(){
+  if(!confirm('Esto borra empleados, movimientos y cierres. Continuar?')) return;
+  respaldoAutomatico();
+  S = estadoBase();
+  guardar(); bindAjustes(); pintarTodo();
+};
+
+function bindAjustes(){
+  [['emp_nombre','nombre'],['emp_rnc','rnc'],['emp_tss','tss'],['emp_tel','tel'],['emp_dir','dir']].forEach(function(c){
+    var el = document.getElementById(c[0]);
+    el.value = S.empresa[c[1]] || '';
+    el.oninput = function(){ S.empresa[c[1]] = el.value; guardar(); pintarCabecera(); };
+  });
+  [['h_ord','ord'],['h_dia','dia'],['h_noc','noc'],['h_fer','fer']].forEach(function(c){
+    var el = document.getElementById(c[0]);
+    el.value = S.horas[c[1]];
+    el.oninput = function(){ S.horas[c[1]] = n(el.value); guardar(); pintarTablaNomina(); pintarResumen(); };
+  });
+}
+
+function pintarCabecera(){
+  document.getElementById('subHeader').textContent =
+    (S.empresa.nombre ? S.empresa.nombre + '  ·  ' : '') + textoPeriodo();
+}
+
+function pintarTodo(){
+  pintarCabecera();
+  selectoresPeriodo(document.getElementById('selNomina'), ['anio','mes','q']);
+  pintarEstadoQuincena();
+  pintarSelectEmpleado();
+  pintarCampos();
+  pintarTablaNomina();
+  pintarResumen();
+  pintarEmpleados();
+  pintarTasas();
+  pintarISR();
+  document.getElementById('estadoGuardado').textContent = almacenOK
+    ? 'Los datos se están guardando en este navegador.'
+    : 'Atención: este navegador no permite guardar. Descargue el respaldo antes de salir.';
+}
+
+bindAjustes();
+pintarTodo();
+
+</script>
+</body>
+</html>
